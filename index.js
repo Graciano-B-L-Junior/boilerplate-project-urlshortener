@@ -18,13 +18,13 @@ db.run("CREATE TABLE IF NOT EXISTS urls (id INTEGER PRIMARY KEY, url TEXT)",func
 // parse application/x-www-form-urlencoded
 
 // parse application/json
-app.use(express.json())
+// app.use(express.json())
 
-app.use(express.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }))
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({ optionsSuccessStatus: 200 }))
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
@@ -40,7 +40,7 @@ app.get('/', function(req, res) {
 app.post("/api/shorturl",function(req,res){
   let url = req.body.url
 
-  const dnslookup = dns.lookup(urlparser.parse(url).hostname,async function(err,address){
+  const dnslookup = dns.lookup(urlparser.parse(url).hostname,function(err,address){
 
     if(!address){
       res.json({ error: 'invalid url' })
